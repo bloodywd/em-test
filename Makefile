@@ -2,7 +2,7 @@
 MANAGE := uv run python3 manage.py
 
 install:
-    uv pip install -r pyproject.toml
+	uv pip install -r pyproject.toml
 
 dev:
 	@$(MANAGE) runserver
