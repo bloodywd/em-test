@@ -2,7 +2,7 @@
 MANAGE := uv run python3 manage.py
 
 install:
-	poetry install
+	uv install
 
 dev:
 	@$(MANAGE) runserver
@@ -26,6 +26,6 @@ shell:
 	@$(MANAGE) shell_plus
 
 start:
-	poetry run gunicorn -w 4 task_manager.wsgi
+	uv run gunicorn -w 4 em_project.wsgi
 
 build: install migrate
