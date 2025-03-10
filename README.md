@@ -1,4 +1,4 @@
-## О прилозжении
+## О приложении
 
 Тестовое задание для Effective Mobile
 
@@ -16,8 +16,8 @@ make start
 ```
 
 ## Стек технологий
-Python 3.10+
-Django 5.1.7+
-HTML
-Bootstrap5
-SQLite/PostgreSQL
+- Python 3.10+
+- Django 5.1.7+
+- HTML
+- Bootstrap5
+- SQLite/PostgreSQL
