@@ -2,7 +2,7 @@
 MANAGE := uv run python3 manage.py
 
 install:
-	uv install
+    uv pip install -r pyproject.toml
 
 dev:
 	@$(MANAGE) runserver
@@ -29,6 +29,6 @@ start:
 	gunicorn -w 4 em_project.wsgi
 
 build:
-    pip install -r requirements.txt
-    python manage.py makemigrations
-    python manage.py migrate
+	pip install -r requirements.txt
+	python manage.py makemigrations
+	python manage.py migrate
