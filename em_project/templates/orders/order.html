@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-lg mt-3 ">
+    <h1>{{ title }}</h1>
+    <div class="card mt-3">
+        <div class="card-header">
+            <h3>{{order}}</h3>
+        </div>
+        <div class="card-body">
+            <div class="col">Table number: {{order.table_number}}</div>
+            <hr>
+            <div class="col">Order items:
+                <ul>
+                    {% for item in order.items.all %}
+                    <li>{{item}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <a class="p-2" href="{% url 'edit_order_items' order.id %}">Edit order items</a>
+        <a class="p-2" href="{% url 'edit_status' order.id %}">Change order status</a>
+        <a class="p-2" href="{% url 'delete_order_by_id' order.id %}">Delete order</a>
+    </div>
+</div>
+</div>
+{% endblock %}

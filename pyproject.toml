@@ -1,0 +1,23 @@
+[project]
+name = "em-orders"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+packages = [
+    { include = "em_test" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "dj-database-url>=2.3.0",
+    "django>=5.1.7",
+    "django-bootstrap5>=25.1",
+    "djangorestframework>=3.15.2",
+    "gunicorn>=23.0.0",
+    "ipython>=8.33.0",
+    "python-dotenv>=1.0.1",
+]
+
+[dependency-groups]
+dev = [
+    "flake8>=7.1.2",
+]

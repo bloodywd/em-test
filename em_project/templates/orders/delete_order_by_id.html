@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load django_bootstrap5 %}
+
+<div class="container-lg mt-3 ">
+    <h1>{{ title }}</h1>
+    <form action="{% url 'delete_order_by_id' order.id %}" method="post">
+        {% csrf_token %}
+        <p>Are you sure, you want to delete {{ order }}?</p>
+        {% bootstrap_button "Yes, delete" button_type="submit" button_class="btn-primary bg-dark border-dark"%}
+    </form>
+</div>
+{% endblock %}
