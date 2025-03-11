@@ -8,7 +8,7 @@
     <form class="form-group" method="post">
         {% csrf_token %}
         {% bootstrap_form form %}
-        {% bootstrap_button button_name button_type="submit" button_class="btn-danger" %}
+        {% bootstrap_button button_name button_type="submit" button_class="btn-danger bg-dark border-dark" %}
     </form>
 
     <div class="table-responsive mt-3">
@@ -29,7 +29,7 @@
                     <form method="post" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" name="delete_item" value="{{ order_item.id }}"
-                                class="btn btn-danger btn-sm">Delete item
+                                class="btn btn-danger btn-sm bg-dark border-dark">Delete item
                         </button>
                     </form>
                 </td>

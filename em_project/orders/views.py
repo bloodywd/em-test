@@ -4,36 +4,25 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+from django_filters.views import FilterView
 from rest_framework import viewsets
 
-from em_project.orders.forms import OrderForm, OrderDeleteForm, OrderSearchForm, OrderUpdateForm, \
-    OrderItemForm
+from em_project.orders.filters import OrderFilter
+from em_project.orders.forms import OrderForm, OrderDeleteForm, \
+    OrderUpdateForm, OrderItemForm
 from em_project.orders.models import Order, OrderItem
 from django.contrib import messages
 
 from em_project.orders.serializers import OrderSerializer
 
 
-class OrderIndexView(View):
-    def get(self, request):
-        form = OrderSearchForm(request.GET)
-        orders = Order.objects.prefetch_related('items').all()
-
-        if form.is_valid():
-            table_number = form.cleaned_data.get('table_number')
-            if table_number:
-                orders = orders.filter(table_number=table_number)
-
-            status = form.cleaned_data.get('status')
-            if status:
-                orders = orders.filter(status=status)
-
-        return render(request, 'orders/search_order.html', {
-            'form': form,
-            'order_list': orders,
-            'title': 'Orders',
-            'button_name': 'Search'
-        })
+class OrderIndexView(FilterView):
+    model = Order
+    filterset_class = OrderFilter
+    template_name = 'orders/orders.html'
+    context_object_name = 'order_list'
+    paginate_by = 20
+    extra_context = {'title': "Orders"}
 
 
 class OrderCreateView(SuccessMessageMixin, CreateView):
@@ -45,8 +34,8 @@ class OrderCreateView(SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         self.object = form.save()
-
-        return redirect(reverse('edit_order_items', kwargs={'pk': self.object.pk}))
+        return redirect(
+            reverse('edit_order_items', kwargs={'pk': self.object.pk}))
 
 
 class OrderDeleteView(View):
@@ -55,9 +44,11 @@ class OrderDeleteView(View):
         if form.is_valid():
             order_id = form.cleaned_data.get('order_id')
             if order_id and Order.objects.filter(id=order_id).exists():
-                return redirect(reverse("delete_order_by_id", args=(order_id,)))
+                return redirect(
+                    reverse("delete_order_by_id", args=(order_id,)))
             else:
-                form.add_error('order_id', 'Order with this ID does not exist.')
+                form.add_error('order_id',
+                               'Order with this ID does not exist.')
         return render(request, 'orders/delete_order.html', {
             'form': form,
             'title': 'Delete Order',
@@ -91,7 +82,7 @@ class OrderEditStatusView(SuccessMessageMixin, UpdateView):
     template_name = 'orders/order_form.html'
     success_message = "Order was updated successfully"
     extra_context = {
-        'title': f'Update order',
+        'title': f'{"Update order"}',
         'button_name': 'Update'
     }
 
@@ -128,7 +119,8 @@ class OrderItemsEditView(View):
                     order_item.save()
                     messages.success(request, 'Item was added successfully')
                 except Exception as e:
-                    messages.error(request, f'Error while saving item: {str(e)}')
+                    messages.error(request,
+                                   f'Error while saving item: {str(e)}')
         order_items = OrderItem.objects.filter(order_id=pk).all()
 
         order.update_total_price()
@@ -140,16 +132,17 @@ class OrderItemsEditView(View):
             'button_name': 'Add item'
         })
 
+
 class CalculateIncomeView(View):
     def get(self, request):
-        form = OrderSearchForm(request.GET)
-        orders = Order.objects.filter(status='paid').prefetch_related('items').annotate(
+        orders = Order.objects.filter(status='paid').prefetch_related(
+            'items').annotate(
             total_order_price=Sum('items__price')
         )
-        total_income = orders.aggregate(total_income=Sum('total_order_price'))['total_income'] or 0
+        total_income = orders.aggregate(total_income=Sum('total_order_price'))[
+                           'total_income'] or 0
 
         return render(request, 'orders/income.html', {
-            'form': form,
             'order_list': orders,
             'title': 'Paid orders',
             'button_name': 'Search',

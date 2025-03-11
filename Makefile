@@ -8,7 +8,7 @@ dev:
 	@$(MANAGE) runserver
 
 lint:
-	uv run flake8 task_manager --exclude=migrations
+	uv run flake8 em_project --exclude=migrations
 
 migrate:
 	@$(MANAGE) makemigrations
@@ -17,18 +17,11 @@ migrate:
 test:
 	@$(MANAGE) test
 
-test-coverage:
-	uv run coverage run manage.py test
-	uv run coverage report -m --include=task_manager/* --omit=task_manager/settings.py
-	uv run coverage xml --include=task_manager/* --omit=task_manager/settings.py
-
-shell:
-	@$(MANAGE) shell_plus
+build: install migrate
 
 start:
-	gunicorn -w 4 em_project.wsgi
+	uv run gunicorn -w 4 em_project.wsgi
 
-build:
-	pip install -r requirements.txt
-	python manage.py makemigrations
-	python manage.py migrate
+build-no-uv:
+	pip install uv
+	build
