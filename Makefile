@@ -23,5 +23,9 @@ start:
 	uv run gunicorn -w 4 em_project.wsgi
 
 build-no-uv:
-	pip install uv
-	make build
+	pip install -r requirements.txt
+	python manage.py makemigrations
+	python manage.py migrate
+
+start-no-uv:
+	gunicorn -w 4 em_project.wsgi
