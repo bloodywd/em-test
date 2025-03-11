@@ -24,4 +24,4 @@ start:
 
 build-no-uv:
 	pip install uv
-	build
+	make build
