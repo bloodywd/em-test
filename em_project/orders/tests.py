@@ -86,7 +86,7 @@ class OrderViewTests(TestCase):
                                  price=150.0)
         OrderItem.objects.create(order=paid_order, dish_name='Dish 2',
                                  price=150.0)
-
+        paid_order.update_total_price()
         response = self.client.get(self.income)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Total Income: 300.00 Р')

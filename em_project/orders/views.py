@@ -136,10 +136,8 @@ class OrderItemsEditView(View):
 class CalculateIncomeView(View):
     def get(self, request):
         orders = Order.objects.filter(status='paid').prefetch_related(
-            'items').annotate(
-            total_order_price=Sum('items__price')
-        )
-        total_income = orders.aggregate(total_income=Sum('total_order_price'))[
+            'items')
+        total_income = orders.aggregate(total_income=Sum('total_price'))[
                            'total_income'] or 0
 
         return render(request, 'orders/income.html', {
