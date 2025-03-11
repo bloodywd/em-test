@@ -2,6 +2,7 @@
 MANAGE := uv run python3 manage.py
 
 install:
+	uv venv .venv
 	uv pip install -r pyproject.toml
 
 dev:
